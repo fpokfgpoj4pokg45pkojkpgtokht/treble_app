@@ -1,4 +1,3 @@
-
 name: Build
 
 on:
@@ -24,6 +23,10 @@ jobs:
 
     - name: Build APK
       run: |
+        # Configure git identity here so the commit below works
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+        
         bash build.sh release
         git commit --allow-empty -m "hi"
 
@@ -38,11 +41,10 @@ jobs:
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
         git config --global credential.helper cache
-        git clone https://${{ secrets.TREBLEDROID_TOKEN }}@github.com/TrebleDroid/vendor_hardware_overlay
+        git clone https://${{ secrets.TREBLEDROID_TOKEN }}@://github.com
         cd vendor_hardware_overlay
         git checkout pie
         cp ../TrebleApp.apk TrebleApp/app.apk
         git add TrebleApp/app.apk
-        # Added --allow-empty here to prevent the pipeline crash
         git commit --allow-empty -m "Up TrebleApp to TrebleDroid/treble_app@${{ steps.latest_commit.outputs.hash }}"
         git push origin pie || true
