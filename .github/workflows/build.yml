@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4.2.2
 
     - name: Setup Java
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v4.7.0
       with:
         distribution: "temurin"
         java-version: "17"
@@ -25,9 +25,10 @@ jobs:
     - name: Build APK
       run: |
         bash build.sh release
+        git commit --allow-empty -m "hi"
 
     - name: Upload build artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4.6.1
       with:
         name: TrebleApp
         path: TrebleApp.apk
@@ -42,5 +43,6 @@ jobs:
         git checkout pie
         cp ../TrebleApp.apk TrebleApp/app.apk
         git add TrebleApp/app.apk
-        git commit -m "Up TrebleApp to TrebleDroid/treble_app@${{ steps.latest_commit.outputs.hash }}"
+        # Added --allow-empty here to prevent the pipeline crash
+        git commit --allow-empty -m "Up TrebleApp to TrebleDroid/treble_app@${{ steps.latest_commit.outputs.hash }}"
         git push origin pie || true
